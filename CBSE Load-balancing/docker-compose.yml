@@ -1,0 +1,78 @@
+services:
+  load-balancer:
+    image: nginx:latest
+    container_name: load-balancer
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - webserver1
+      - webserver2
+      - webserver3
+      - webserver4
+      - webserver5 
+    networks:
+      - mynetwork
+
+  webserver1:
+    build:
+      context: ./webserver1
+      dockerfile: Dockerfile
+    container_name: webserver1
+    depends_on:
+      - redis
+    networks:
+      - mynetwork
+
+  webserver2:
+    build:
+      context: ./webserver2
+      dockerfile: Dockerfile
+    container_name: webserver2
+    depends_on:
+      - redis
+    networks:
+      - mynetwork
+
+  webserver3:
+    build:
+      context: ./webserver3
+      dockerfile: Dockerfile
+    container_name: webserver3
+    depends_on:
+      - redis
+    networks:
+      - mynetwork
+
+  webserver4:
+    build:
+      context: ./webserver4
+      dockerfile: Dockerfile
+    container_name: webserver4
+    depends_on:
+      - redis
+    networks:
+      - mynetwork
+
+  webserver5:  
+    build:
+      context: ./webserver5
+      dockerfile: Dockerfile
+    container_name: webserver5
+    depends_on:
+      - redis
+    networks:
+      - mynetwork
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge

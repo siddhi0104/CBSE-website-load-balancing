@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CBSE Results 2024</title>
+    <link rel="icon" type="image/png" href="CBSE_Logo-removebg-preview.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#17a2b8',
+                        secondary: '#28a745'
+                    },
+                    borderRadius: {
+                        'none': '0px',
+                        'sm': '4px',
+                        DEFAULT: '8px',
+                        'md': '12px',
+                        'lg': '16px',
+                        'xl': '20px',
+                        '2xl': '24px',
+                        '3xl': '32px',
+                        'full': '9999px',
+                        'button': '8px'
+                    }
+
+                }
+            }
+        }
+
+        
+    </script>
+    <style>
+        :where([class^="ri-"])::before { content: "\f3c2"; }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .loading {
+            animation: spin 1s linear infinite;
+        }
+
+
+    </style>
+</head>
+<body class="min-h-screen bg-gray-50">
+
+    <header class="bg-primary text-white py-2 shadow-sm">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-6">
+                    <div class="w-11 h-11 flex items-center justify-center ">
+                        <a href="https://www.cbse.gov.in/cbsenew/cbse.html">
+                            <img src="CBSE_Logo-removebg-preview.png" alt="CBSE Logo">
+                        </a>
+                    </div>
+                    <a href="CBSE Result Portal.html"><h1 class="text-2xl font-bold">CBSE Examination Results Server 5 </h1></a>
+                    
+                </div>
+                <nav>
+                    <ul class="flex space-x-6">
+                        <li><a href="https://www.cbse.gov.in/" class="hover:text-gray-300">Home</a></li>
+                        <li><a href="https://www.cbse.gov.in/cbsenew/history.html" class="hover:text-gray-300">About</a></li>
+                        <li><a href="https://www.cbse.gov.in/cbsenew/contact-us.html" class="hover:text-gray-300">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    
+    <main class="container mx-auto px-4 py-5">
+        <div class="max-w-xl mx-auto">
+            <div class="bg-white rounded-lg shadow-lg p-6 ">
+                <h2 class="text-2xl font-semibold mb-6">Enter Student Details:</h2>
+                <form id="resultForm" class="space-y-4" >
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Roll Number <span class="text-red-500">*</span> </label>
+                        <input type="text" class="w-full px-4 py-2 border rounded-button focus:outline-none focus:ring-2 focus:ring-primary" pattern="[0-9]*" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">School Number <span class="text-red-500">*</span> </label>
+                        <input type="text" class="w-full px-4 py-2 border rounded-button focus:outline-none focus:ring-2 focus:ring-primary" pattern="[0-9]*" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1" >Admit Card ID <span class="text-red-500">*</span> </label>
+                        <input type="text" class="w-full px-4 py-2 border rounded-button focus:outline-none focus:ring-2 focus:ring-primary" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Date of Birth <span class="text-red-500">*</span> </label>
+                        <input type="date" class="w-full px-4 py-2 border rounded-button focus:outline-none focus:ring-2 focus:ring-primary" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Year <span class="text-red-500">*</span> </label>
+                        <select class="w-full px-4 py-2 border rounded-button focus:outline-none focus:ring-2 focus:ring-primary" required>
+                            <option value="2025">2025</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                        </select>
+                    </div>
+
+                    <div class="flex items-center gap-4">
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Captcha <span class="text-red-500">*</span> </label>
+                            <div class="flex gap-2">
+                                <div id="captcha" class="bg-gray-100 px-4 py-2 rounded-button text-lg font-mono"></div>
+                                <button type="button" id="refreshCaptcha" class="p-2 text-primary hover:bg-gray-100 rounded-button">
+                                    <i class="ri-refresh-line ri-lg"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Enter Captcha</label>
+                            <input type="text" id="captchaInput" class="w-full px-4 py-2 border rounded-button focus:outline-none focus:ring-2 focus:ring-primary" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-primary text-white px-6 py-3 rounded-button hover:bg-primary/90 transition-colors whitespace-nowrap">
+                        Check Result
+                    </button>
+                </form>
+            </div>
+
+
+            <div id="loadingSection" class="hidden">
+                <div class="flex flex-col items-center justify-center p-8">
+                    <div class="w-12 h-12 border-4 border-primary border-t-transparent rounded-full loading"></div>
+                    <p class="mt-4 text-gray-600">Please wait while we fetch your results...</p>
+                </div>
+            </div>
+
+            <div id="resultSection" class="hidden bg-white rounded shadow-lg p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-semibold">Result Details</h2>
+                    <div class="flex gap-4">
+                        <button id="downloadPdf" class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-button hover:bg-primary/90 transition-colors whitespace-nowrap">
+                            <i class="ri-file-download-line"></i>
+                            Download PDF
+                        </button>
+                        <button id="printResult" class="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-button hover:bg-gray-700 transition-colors whitespace-nowrap">
+                            <i class="ri-printer-line"></i>
+                            Print
+                        </button>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-sm text-gray-600">Student Name</p>
+                            <p class="font-medium">John William Smith</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Roll Number</p>
+                            <p class="font-medium">2024001234</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">School</p>
+                            <p class="font-medium">St. Mary's High School</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Academic Year</p>
+                            <p class="font-medium">2023-2024</p>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="bg-gray-50">
+                                    <th class="px-4 py-2 text-left">Subject</th>
+                                    <th class="px-4 py-2 text-center">Theory</th>
+                                    <th class="px-4 py-2 text-center">Practical</th>
+                                    <th class="px-4 py-2 text-center">Total</th>
+                                    <th class="px-4 py-2 text-center">Grade</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b">
+                                    <td class="px-4 py-2">English</td>
+                                    <td class="px-4 py-2 text-center">85</td>
+                                    <td class="px-4 py-2 text-center">-</td>
+                                    <td class="px-4 py-2 text-center">85</td>
+                                    <td class="px-4 py-2 text-center">A</td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="px-4 py-2">Mathematics</td>
+                                    <td class="px-4 py-2 text-center">92</td>
+                                    <td class="px-4 py-2 text-center">-</td>
+                                    <td class="px-4 py-2 text-center">92</td>
+                                    <td class="px-4 py-2 text-center">A+</td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="px-4 py-2">Science</td>
+                                    <td class="px-4 py-2 text-center">78</td>
+                                    <td class="px-4 py-2 text-center">20</td>
+                                    <td class="px-4 py-2 text-center">98</td>
+                                    <td class="px-4 py-2 text-center">A+</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-sm text-gray-600">Total Marks Obtained</p>
+                                <p class="text-xl font-semibold">275</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Percentage</p>
+                                <p class="text-xl font-semibold">91.67%</p>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="bg-secondary text-white px-4 py-2 rounded text-center">
+                                PASS
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const mockResult = {
+            student: {
+                name: "John William Smith",
+                rollNumber: "2024001234",
+                school: "St. Mary's High School",
+                year: "2023-2024"
+            },
+            subjects: [
+                { name: "English", theory: 85, practical: null, total: 85, grade: "A" },
+                { name: "Mathematics", theory: 92, practical: null, total: 92, grade: "A+" },
+                { name: "Science", theory: 78, practical: 20, total: 98, grade: "A+" }
+            ],
+            total: 275,
+            percentage: 91.67,
+            result: "PASS"
+        };
+
+        function generateCaptcha() {
+            const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            let captcha = '';
+            for(let i = 0; i < 6; i++) {
+                captcha += chars[Math.floor(Math.random() * chars.length)];
+            }
+            document.getElementById('captcha').textContent = captcha;
+            return captcha;
+        }
+
+        let currentCaptcha = generateCaptcha();
+
+        document.getElementById('refreshCaptcha').addEventListener('click', () => {
+            currentCaptcha = generateCaptcha();
+        });
+
+        document.getElementById('resultForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const captchaInput = document.getElementById('captchaInput').value;
+            if(captchaInput.toUpperCase() !== currentCaptcha) {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4';
+                errorDiv.textContent = 'Invalid captcha. Please try again.';
+                e.target.insertBefore(errorDiv, e.target.firstChild);
+                setTimeout(() => errorDiv.remove(), 3000);
+                return;
+            }
+
+            document.getElementById('resultForm').parentElement.classList.add('hidden');
+            document.getElementById('loadingSection').classList.remove('hidden');
+
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            document.getElementById('loadingSection').classList.add('hidden');
+            document.getElementById('resultSection').classList.remove('hidden');
+        });
+
+        document.getElementById("downloadPdf").addEventListener("click", function () {
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF("p", "mm", "a4");
+
+        // Select the result section
+        const resultSection = document.getElementById("resultSection");
+
+        html2canvas(resultSection, { scale: 2 }).then(canvas => {
+            const imgData = canvas.toDataURL("image/png");
+            const imgWidth = 190; // A4 width in mm
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+            pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
+            pdf.save("Your Result.pdf");
+        });
+    });
+
+        document.getElementById('printResult').addEventListener('click', () => {
+            window.print();
+        });
+    </script>
+</body>
+</html>
