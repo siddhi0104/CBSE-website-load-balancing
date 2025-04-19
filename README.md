@@ -32,6 +32,7 @@ Load Testing and Performance Analysis
 Used JMeter and command-line testing to simulate concurrent user requests. A sample test run included:
 artillery quick --count 10 --num 50 http://localhost:8080/
 This test generated significant traffic, revealing an error rate of 20% under high load. The findings indicated that while the system efficiently handled 80% of requests, optimizations such as horizontal scaling and caching could further enhance performance.
+
 ![image](https://github.com/user-attachments/assets/c9124f41-f4f1-40d9-b7cd-93733bc14900)
 ![image](https://github.com/user-attachments/assets/24016d0e-e8ef-45b9-809b-7556237614d9)
 
