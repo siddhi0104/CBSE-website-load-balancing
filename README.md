@@ -14,15 +14,22 @@ A load-balanced, containerized architecture was implemented to ensure high avail
 --> Docker Containers: Simplifies deployment and ensures consistency across environments.
 
 Technology Stack
+
 •	Programming Language:
 o	Node.js (for web servers)
+
 •	Data Store & Messaging:
 o	Redis (for request counting and log message handling)
+
 •	Deployment Tools:
+
 o	Docker (for creating isolated, portable services)
+
 o	Docker Compose (for managing multiple containers)
+
 •	Load Balancing:
 o	Nginx (for distributing traffic across multiple web servers)
+
 •	Testing Tools:
 o	JMeter & Command-Line Tools (for load testing and performance benchmarking)
 
