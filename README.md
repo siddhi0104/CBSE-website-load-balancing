@@ -6,6 +6,7 @@ During peak result times, the CBSE website faces high traffic, causing slow resp
 
 Solution:
 A load-balanced, containerized architecture was implemented to ensure high availability and performance:
+
 --> 5 Web Servers: Identical Node.js/Express instances serving the result site.
 --> Nginx Load Balancer: Distributes traffic evenly to prevent overload.
 --> Docker Containers: Simplifies deployment and ensures consistency across environments.
